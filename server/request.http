@@ -1,0 +1,45 @@
+@EMAIL=test@test.com
+@PASSWORD=password
+
+#################### 
+## REGISTER
+####################
+POST http://localhost:3001/user/register
+Content-Type: application/json
+
+{
+    "firstName":"Wilfred",
+    "lastName":"Lopez",
+    "email": "{{EMAIL}}",
+    "password":"{{PASSWORD}}"
+}
+
+
+#################### 
+## Login
+####################
+POST http://localhost:3001/user/login
+Content-Type: application/json
+
+{
+    "email": "{{EMAIL}}",
+    "password":"{{PASSWORD}}"
+}
+
+
+###################
+@TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTJkNmYwZDRjMTUyMWE4MGE2NTQwMyIsImlhdCI6MTYyMDIzNzA2Mn0.QrCnFgz37_ucJdpqlUr1kodPa-2H5TeAuuuI5SdDPH8
+##################
+
+
+#################### 
+## ME
+####################
+GET http://localhost:3001/user/me
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+{
+    "email": "{{EMAIL}}",
+    "password":"{{PASSWORD}}"
+}
