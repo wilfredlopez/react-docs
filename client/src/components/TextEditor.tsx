@@ -2,23 +2,29 @@ import { useCallback, useEffect, useState } from 'react'
 import Quill, { TextChangeHandler } from 'quill'
 import io from 'socket.io-client'
 import 'quill/dist/quill.snow.css'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import { API_SOCKET_URL } from '../constants'
+import { RestHandler } from '../models/RestHandler'
+import { LogoutIcon } from './LogoutIcon'
 
 
 interface Props {
 
 }
 
+
+
 const TOOLBAR_OPTIONS = [
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     [{ font: [] }],
     [{ list: 'ordered' }, { list: 'bullet' }],
-    ['bold', 'italic', 'underline'],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [{ color: [] }, { background: [] }],
     [{ script: 'sub' }, { script: 'super' }],
     [{ align: [] }],
     ['image', 'blockquote', 'code-block'],
+    [{ 'indent': '-1' }, { 'indent': '+1' }],
+    ['link', 'image', 'video'],
     ['clean']
 ]
 
@@ -27,22 +33,38 @@ const EVENT_NAMES = {
     , receiveChanges: 'receive-changes',
     getDocument: 'get-document',
     loadDocument: 'load-document',
-    saveDocument: 'save-document'
+    saveDocument: 'save-document',
+    unauthorized: "unauthorized"
 }
 
-
 const SAVE_INTERVAL = 2000
+
+
+// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTJkNmYwZDRjMTUyMWE4MGE2NTQwMyIsImlhdCI6MTYyMDIzNzA2Mn0.QrCnFgz37_ucJdpqlUr1kodPa-2H5TeAuuuI5SdDPH8'
+
 export const TextEditor = (props: Props) => {
     const { id } = useParams<{ id: string }>()
+    const history = useHistory()
     const [socket, setSocket] = useState<SocketIOClient.Socket>()
     const [quill, setQuill] = useState<Quill>()
     useEffect(() => {
-        const s = io.connect(API_SOCKET_URL)
+        const token = RestHandler.userToken
+        const s = io.connect(API_SOCKET_URL, {
+            auth: {
+                Authorization: token
+            }
+        })
         setSocket(s)
         return () => {
             s.disconnect()
         }
     }, [])
+    useEffect(() => {
+        if (!socket) return
+        socket.once(EVENT_NAMES.unauthorized, () => {
+            history.push('/login')
+        })
+    }, [socket, id, history])
 
     useEffect(() => {
         if (!quill || !socket) return
@@ -118,9 +140,25 @@ export const TextEditor = (props: Props) => {
         },
         [],
     )
-    return (
-        <div id="text-editor" ref={containerRef}>
 
-        </div>
+
+    function logout() {
+        RestHandler.logout().then(() => history.push('/login'))
+    }
+
+
+    return (
+        <>
+            <div className="fixed-logout">
+                <button
+                    onClick={logout}
+                    className="btn btn-logout" aria-label="logout" title="logout">
+                    <LogoutIcon width={20} />
+                </button>
+            </div>
+            <div id="text-editor" ref={containerRef}>
+
+            </div>
+        </>
     )
 }
