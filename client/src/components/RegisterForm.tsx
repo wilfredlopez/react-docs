@@ -1,45 +1,9 @@
 import { useEffect } from 'react'
 import { useState } from 'react'
 import { RestHandler } from '../models/RestHandler'
-import { isAnyEmpty } from '../utils/utils'
+import { isAnyEmpty, toggleLabelClassForInputs } from '../utils/utils'
 import { useHistory } from 'react-router-dom'
 
-
-/**
- * Make inputs and labels work like Material Design.
- */
-function toggleLabelClassForInputs() {
-    const labels = document.querySelectorAll('label')
-
-    for (let i = 0; i < labels.length; i++) {
-        const label = labels[i]
-        const inputId = label.htmlFor
-        const labelInput = document.querySelector(`input#${inputId}`) as HTMLInputElement | null
-        if (labelInput) {
-            labelInput.addEventListener('focus', () => {
-                if (!labelInput.value) {
-
-                    label.classList.add('label-shrink')
-                    label.classList.remove('label-filled')
-                }
-            })
-            labelInput.addEventListener('focusout', () => {
-                if (!labelInput.value) {
-                    label.classList.add('label-filled')
-                    label.classList.remove('label-shrink')
-                }
-            })
-            labelInput.addEventListener('change', () => {
-                if (labelInput.value === '') {
-                    label.classList.remove('hidden')
-                } else {
-                    label.classList.add('hidden')
-                }
-            })
-        }
-
-    }
-}
 
 interface Props {
 
@@ -155,7 +119,9 @@ export const RegisterForm = (props: Props) => {
                 <div className="form-control error-text">
                     {error}
                 </div>
-                <button className="btn" type="submit">Register</button>
+                <div className="form-control form-submit-btn">
+                    <button className="btn" type="submit">Register</button>
+                </div>
             </div>
         </form>
     )

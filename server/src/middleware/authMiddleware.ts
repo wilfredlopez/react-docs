@@ -19,7 +19,7 @@ export const authMiddlware: RequestHandler = (req, _res, next) => {
     } else {
         try {
             const token = auth_headers.split(" ")[1]
-            //this can throw an error
+            //this can throw an error if token is not valid or is expired.
             const { id } = getUserIdWithToken(token)
             req.session.userId = id
         } catch (error) {

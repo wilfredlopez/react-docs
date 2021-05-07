@@ -6,7 +6,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { JWT_SECRET } from '../env'
 import { MongoError } from 'mongodb'
-import { WorkDocument } from '../models/WorkDocument'
+import { WorkDocument, WorkDocumentInterface } from '../models/WorkDocument'
 const router = Router()
 
 type ExpectedRegisterBody = Pick<UserInterface, 'firstName' | 'email' | 'lastName' | 'password'>
@@ -123,6 +123,59 @@ router.get('/me', async (req, res) => {
         error: "Unauthorized"
     })
 })
+
+router.get('/documents', async (req, res) => {
+    const id = req.session.userId
+    let documents: WorkDocumentInterface[] = []
+
+    if (id) {
+        try {
+            documents = await WorkDocument.find({ user_id: id }).sort([['updatedAt', 'ascending']]).exec()
+            return res.json(documents)
+        } catch (error) {
+
+            console.log({ error })
+        }
+    }
+    return res.status(401).json({
+        error: "Unauthorized"
+    })
+})
+
+router.route('/documents/:id').get(async (req, res) => {
+    const docId = req.params.id
+    const id = req.session.userId
+    let document: WorkDocumentInterface | null = null
+
+    if (id) {
+        try {
+            document = await WorkDocument.findOne({ user_id: id, docId: docId })
+            return res.json(document)
+        } catch (error) {
+
+            console.log({ error })
+        }
+    }
+    return res.status(401).json({
+        error: "Unauthorized"
+    })
+})
+    .delete(async (req, res) => {
+        const docId = req.params.id
+        const user_id = req.session.userId
+
+        if (user_id) {
+            try {
+                const payload = await WorkDocument.deleteOne({ user_id: user_id, _id: docId })
+                return res.json(payload)
+            } catch (error) {
+                console.log({ error })
+            }
+        }
+        return res.status(401).json({
+            error: "Unauthorized"
+        })
+    })
 
 function generateToken(user: UserDocument) {
     return jwt.sign({

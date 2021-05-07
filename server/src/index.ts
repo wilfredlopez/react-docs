@@ -1,21 +1,21 @@
-import socket from 'socket.io'
+import { ObjectId } from 'bson'
+import { cors, CorsOptions } from 'cors-ts'
+import express from 'express'
+import session from 'express-session'
+import http from 'http'
 import mongoose from 'mongoose'
+import socket from 'socket.io'
+import { UserController } from './controllers'
+import { CLIENT_ORIGIN, MONGO_URL, SESSION_SECRET } from './env'
+import { authMiddlware } from './middleware/authMiddleware'
+import { User, UserDocument } from './models/User'
 import { WorkDocument } from './models/WorkDocument'
 import { findOrCreateWorkDoc } from './utils'
-import { CLIENT_ORIGIN, MONGO_URL, SESSION_SECRET } from './env'
-import express from 'express'
-import http from 'http'
-import { authMiddlware } from './middleware/authMiddleware'
-import { cors, CorsOptions } from 'cors-ts'
-import session from 'express-session'
-import { ObjectId } from 'bson'
-import { UserController } from './controllers'
 import { getUserIdWithToken } from './utils/index'
-import { User, UserDocument } from './models/User'
 
 const app = express()
 const cors_options: CorsOptions = {
-    methods: ['POST', "GET"],
+    methods: ['POST', "GET", "DELETE"],
     credentials: true,
     origin: CLIENT_ORIGIN
 }
@@ -68,6 +68,7 @@ async function main() {
     })
 
 
+
     io.on('connection', async (socket) => {
         /**
          * Client Most Send  
@@ -79,43 +80,57 @@ async function main() {
         })
          */
         const token = socket.handshake.auth['Authorization']
-        if (!token) {
-            socket.emit(EVENT_NAMES.unauthorized)
-            return null
-        }
-        let user: UserDocument | null = null
-        try {
-            const { id } = getUserIdWithToken(token)
-            user = await User.findById(id)
-        } catch (error) {
-            socket.emit(EVENT_NAMES.unauthorized)
-            return null
-        }
+        const user = await getSocketUser(token)
+
         if (user === null || user === undefined) {
             socket.emit(EVENT_NAMES.unauthorized)
-            return null
+            return
         }
 
         socket.on(EVENT_NAMES.getDocument, async (docId: string) => {
-            const document = await findOrCreateWorkDoc(docId, user!._id)
-            //create room based on docId
-            socket.emit(EVENT_NAMES.loadDocument, document?.data)
-            socket.join(docId)
-            socket.on(EVENT_NAMES.sendChanges, (delta) => {
-                socket.broadcast.to(docId).emit(EVENT_NAMES.receiveChanges, delta)
-            })
-            socket.on(EVENT_NAMES.saveDocument, async (data) => {
-                await WorkDocument.findOneAndUpdate({
-                    docId: docId,
-                    user_id: user!._id
-                }, {
-                    data: data
+            if (user) {
+
+                const document = await findOrCreateWorkDoc(docId, user._id)
+                //create room based on docId
+                socket.emit(EVENT_NAMES.loadDocument, document?.data)
+                socket.join(docId)
+                socket.on(EVENT_NAMES.sendChanges, (delta) => {
+                    socket.broadcast.to(docId).emit(EVENT_NAMES.receiveChanges, delta)
                 })
-            })
+                socket.on(EVENT_NAMES.saveDocument, async (data) => {
+                    await WorkDocument.findOneAndUpdate({
+                        docId: docId,
+                        user_id: user._id
+                    }, {
+                        data: data
+                    })
+                })
+            }
         })
     })
 
 
+}
+
+
+
+/**
+ * Returns User Or null. Doesnt throw any errors.
+ * @param token auth from socket.handshake.auth['Authorization']
+ * @returns 
+ */
+async function getSocketUser(token: string | undefined) {
+    if (!token) {
+        return null
+    }
+    let user: UserDocument | null = null
+    try {
+        const { id } = getUserIdWithToken(token)
+        user = await User.findById(id)
+        return user
+    } catch (error) {
+        return null
+    }
 }
 
 main()

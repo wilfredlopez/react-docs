@@ -6,10 +6,19 @@
 :root {
   --light-bg-doc: #f3f3f3;
   --doc-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-
-  --hue: 42;
+  /* --primary-color: rgb(0, 102, 235);
+  --primary-color-hue: hsl(214, 100%, 50%);
+  --primary-color-saturation: hsl(214, 100%, 42%); */
+  --primary-color-constrast: hsl(0, 0%, 90%);
+  --primary-color: hsl(165deg, 50%, 36%);
+  --primary-color-hue: hsl(165deg, 50%, 39%);
+  --primary-color-saturation: hsl(165deg, 50%, 30%);
+  /* --hue: 42;
   --saturation: 90%;
-  --ligntness: 77%;
+  --ligntness: 77%; */
+  --hue: 165;
+  --saturation: 50%;
+  --ligntness: 35%;
   --light: hsl(var(--hue), var(--saturation), calc(var(--ligntness) + 2%));
   --medium: hsl(var(--hue), var(--saturation), var(--ligntness));
   --dark: hsl(var(--hue), var(--saturation), calc(var(--ligntness) - 10%));
@@ -19,12 +28,19 @@
     var(--medium) 70%,
     var(--dark)
   );
+  --linear-bg-contrast: #fff;
+  --fix-menu-button-bg: var(--primary-color);
+  --fix-menu-button-bg-light: var(--primary-color-hue);
+  --fix-menu-button-bg-contrast: #fff;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--light-bg-doc);
@@ -35,18 +51,68 @@ code {
     monospace;
 }
 
+#text-editor {
+  margin: auto;
+}
 #text-editor .ql-editor {
+  --ql-editor-padding: 1in;
   width: 8.5in;
+  max-width: calc(100vw - var(--ql-editor-padding, 1in));
   min-height: 11in;
-  padding: 1in;
+  padding: var(--ql-editor-padding);
   margin: 1rem;
   box-shadow: var(--doc-box-shadow);
   background-color: white;
 }
+
+@media screen and (max-width: 790px) {
+  #text-editor .ql-editor {
+    --ql-editor-padding: 0.5in;
+    max-width: calc(100vw - var(--ql-editor-padding, 1in));
+    padding: var(--ql-editor-padding);
+  }
+}
+
+.btn-unstyled {
+  cursor: pointer;
+  display: contents;
+}
+.unstyled-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  background: inherit;
+  background-color: inherit;
+}
+
 #text-editor .ql-container {
   border: none;
   display: grid;
   place-content: center;
+}
+
+.mt-4 {
+  margin-top: 4rem;
+}
+.form-submit-btn,
+.form-control.form-submit-btn {
+  width: 100%;
+  max-width: 380px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-right: unset;
+  margin-left: auto;
+}
+.form-submit-btn > button {
+  margin-right: unset;
+  margin-left: auto;
+  width: 100%;
+}
+
+.small-space {
+  max-width: 250px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #text-editor .ql-toolbar {
@@ -57,12 +123,65 @@ code {
   z-index: 1;
   /* background-color: var(--light-bg-doc); */
   background: var(--linear-bg);
+  color: var(--linear-bg-contrast);
   border: none;
   box-shadow: var(--doc-box-shadow);
+  flex-wrap: wrap;
 }
 
+#text-editor .ql-toolbar.ql-snow .ql-formats .ql-stroke {
+  stroke: var(--linear-bg-contrast);
+}
+#text-editor .ql-toolbar.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill,
+#text-editor .ql-toolbar.ql-snow .ql-fill,
+.ql-snow .ql-stroke.ql-fill {
+  fill: var(--linear-bg-contrast);
+}
+
+#text-editor .ql-toolbar.ql-snow.ql-toolbar button,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar button,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar button,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar button,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar button.ql-active,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar button.ql-active,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-label,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-label,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-item,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-item,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: var(--linear-bg-contrast);
+}
+#text-editor .ql-toolbar.ql-snow.ql-toolbar button:hover,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar button:hover,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar button:focus,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar button:focus,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar button.ql-active,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar button.ql-active,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-label:hover,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-label:hover,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-label.ql-active,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-label.ql-active,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-item:hover,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-item:hover,
+#text-editor .ql-toolbar.ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+#text-editor .ql-toolbar.ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+  color: rgb(201, 197, 197);
+}
+#text-editor .ql-toolbar.ql-snow .ql-picker-options {
+  background: var(--linear-bg);
+}
 @page {
   margin: 1in;
+}
+
+@media screen and (max-width: 950px) {
+  #text-editor .ql-editor {
+    margin-top: 0;
+  }
 }
 
 @media print {
@@ -200,13 +319,16 @@ input {
   max-width: 780px;
   width: 100%;
   margin: auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .btn {
   cursor: pointer;
   padding: 8px 12px;
-  background-color: hsl(214, 50%, 50%);
-  color: hsl(0, 0%, 90%);
+  text-decoration: none;
+  background-color: var(--primary-color);
+  color: var(--primary-color-constrast);
   font-size: 1.2rem;
   border: none;
   outline: none;
@@ -220,13 +342,32 @@ input {
 
 .btn:hover,
 .btn:focus {
-  background-color: hsl(214, 50%, 45%);
+  background-color: var(--primary-color-saturation);
+}
+.fixed-logout[white='true'] {
+  border: 1px solid #ffffff;
 }
 .fixed-logout {
   position: fixed;
-  right: 5px;
-  top: 5px;
+  right: 10px;
+  /* top: 5px; */
+  top: 10px;
+  padding: 5px 6px;
   z-index: 2;
+  border-radius: 50%;
+  /* box-shadow: inset 0px 0px 5px 0px rgb(0 0 0 / 4%),
+    inset 0px 0px 0px 1px rgb(0 0 0 / 7%); */
+  /* background: rgb(220 220 220 / 81%); */
+  color: white;
+  display: grid;
+  place-content: center;
+  border: 2px solid var(--fix-menu-button-bg-light);
+  background: var(--fix-menu-button-bg);
+}
+
+.fixed-logout svg {
+  /* transform: translateY(2px); */
+  stroke: var(--fix-menu-button-bg-contrast);
 }
 ::-webkit-scrollbar {
   display: none;
@@ -245,7 +386,14 @@ input {
 .bg-linear {
   background: var(--linear-bg);
 }
+.bg-main {
+  /* background: #f3f3f3; */
+  background: #e6e6e6;
+}
 
+.mt-2 {
+  margin-top: 2rem;
+}
 .vh-100 {
   height: 100vh;
 }
@@ -274,30 +422,49 @@ input {
   width: 80%;
   transform: translate(0px, -5px);
 }
-.btn.btn-link:hover {
+.btn.btn-link:hover,
+.btn.btn-link:focus {
   background-color: transparent;
-  color: hsl(229, 69%, 40%);
+  color: hsl(229, 69%, 60%);
 }
 .btn.btn-sm {
   padding: 6px 8px;
 }
 
+.btn.btn-xs {
+  padding: 5px 6px;
+  font-size: 0.9rem;
+}
+.btn-danger {
+  background: linear-gradient(45deg, hsl(346deg 52% 56%), hsl(352deg 65% 54%));
+}
+.btn.btn-danger:hover,
+.btn.btn-danger:focus {
+  background: linear-gradient(
+    45deg,
+    hsl(346deg, 52%, 50%),
+    hsl(352deg, 65%, 48%)
+  );
+}
+
+.no-upper {
+  text-transform: none !important;
+}
+
 .btn.btn-logout {
-  padding: 4px 5px;
+  /* padding: 4px 5px; */
   background: linear-gradient(45deg, hsl(0, 92%, 61%), hsl(0, 100%, 60%));
-  border-radius: 50%;
 }
 .btn.btn-logout:hover {
-  padding: 4px 5px;
   background: linear-gradient(45deg, hsl(0, 92%, 62%), hsl(0, 100%, 58%));
-  border-radius: 50%;
 }
 .btn.btn-logout svg {
-  transform: translate(1px, 0px);
+  transform: translate(5px, -2px);
 }
 
 .heading-1 {
   font-size: 2.2rem;
+  margin: 1.2rem 0;
 }
 
 .flex {

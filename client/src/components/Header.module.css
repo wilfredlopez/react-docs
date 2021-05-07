@@ -1,0 +1,20 @@
+.Header {
+  max-width: 100%;
+  width: 100%;
+  margin: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: var(--linear-bg, #0066ea);
+  color: var(--linear-bg-contrast);
+  box-shadow: 0px 2px 5px 2px rgb(0 0 0 / 15%), 0px 2px 1px 1px rgb(0 0 0 / 12%);
+}
+
+.Header h1 {
+  font-size: 1.9rem;
+  margin: 0;
+  line-height: 3.8rem;
+}

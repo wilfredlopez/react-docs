@@ -3,6 +3,9 @@ import { LoginForm } from '../components/LoginForm'
 import { RegisterForm } from '../components/RegisterForm'
 import { RestHandler } from '../models/RestHandler'
 import { useHistory } from 'react-router-dom'
+import { Header } from '../components/Header'
+import { usePageTitle } from '../hooks/usePageTitle'
+import { APP_TITLE } from '../constants'
 
 interface Props {
 
@@ -11,6 +14,7 @@ interface Props {
 export const Login = (props: Props) => {
     const [isLogin, setIsLogin] = useState(true)
     const history = useHistory()
+    usePageTitle(`Login / Register - ${APP_TITLE}`)
 
 
     //Autologin
@@ -19,7 +23,7 @@ export const Login = (props: Props) => {
             if ('error' in response) {
                 return
             }
-            history.push('/')
+            history.push('/me')
         })
     }, [history])
 
@@ -27,16 +31,14 @@ export const Login = (props: Props) => {
         setIsLogin(c => !c)
     }
 
-    const label = isLogin ? "Login" : "Register"
 
 
     return (
-        <div className="bg-linear vh-100">
+        <div className="bg-main vh-100">
+            <Header />
 
             <div className="container">
-                <h1 className="heading-1 text-center">
-                    {label}
-                </h1>
+                <div className="mt-2" />
                 {isLogin ?
                     <LoginForm />
                     :

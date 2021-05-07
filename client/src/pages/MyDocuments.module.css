@@ -1,0 +1,20 @@
+.Item {
+  margin-bottom: 2rem;
+}
+
+.DateText {
+  font-size: small;
+  margin: 0;
+  flex: 1;
+}
+
+.Link {
+  text-decoration: none;
+  flex: 1;
+  color: rgb(13, 72, 209);
+  font-weight: bold;
+}
+
+.Title {
+  text-align: center;
+}

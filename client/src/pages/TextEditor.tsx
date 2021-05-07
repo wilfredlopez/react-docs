@@ -1,17 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
 import Quill, { TextChangeHandler } from 'quill'
-import io from 'socket.io-client'
 import 'quill/dist/quill.snow.css'
+import { useCallback, useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import { API_SOCKET_URL } from '../constants'
+import io from 'socket.io-client'
+import { UserMenu } from '../components/UserMenu'
+import { API_SOCKET_URL, APP_TITLE } from '../constants'
+import { usePageTitle } from '../hooks/usePageTitle'
 import { RestHandler } from '../models/RestHandler'
-import { LogoutIcon } from './LogoutIcon'
-
-
-interface Props {
-
-}
-
 
 
 const TOOLBAR_OPTIONS = [
@@ -40,18 +35,17 @@ const EVENT_NAMES = {
 const SAVE_INTERVAL = 2000
 
 
-// const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwOTJkNmYwZDRjMTUyMWE4MGE2NTQwMyIsImlhdCI6MTYyMDIzNzA2Mn0.QrCnFgz37_ucJdpqlUr1kodPa-2H5TeAuuuI5SdDPH8'
 
-export const TextEditor = (props: Props) => {
+export const TextEditor = () => {
     const { id } = useParams<{ id: string }>()
+    usePageTitle(`Editor - ${APP_TITLE}`)
     const history = useHistory()
     const [socket, setSocket] = useState<SocketIOClient.Socket>()
     const [quill, setQuill] = useState<Quill>()
     useEffect(() => {
-        const token = RestHandler.userToken
         const s = io.connect(API_SOCKET_URL, {
             auth: {
-                Authorization: token
+                Authorization: RestHandler.userToken
             }
         })
         setSocket(s)
@@ -142,20 +136,9 @@ export const TextEditor = (props: Props) => {
     )
 
 
-    function logout() {
-        RestHandler.logout().then(() => history.push('/login'))
-    }
-
-
     return (
         <>
-            <div className="fixed-logout">
-                <button
-                    onClick={logout}
-                    className="btn btn-logout" aria-label="logout" title="logout">
-                    <LogoutIcon width={20} />
-                </button>
-            </div>
+            <UserMenu />
             <div id="text-editor" ref={containerRef}>
 
             </div>

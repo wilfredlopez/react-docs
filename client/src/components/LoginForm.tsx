@@ -73,7 +73,7 @@ export const LoginForm = (props: Props) => {
                 return
             }
             RestHandler.saveToken(res.token)
-            history.push('/')
+            history.push('/me')
         })
 
     }
@@ -116,10 +116,14 @@ export const LoginForm = (props: Props) => {
                 </div>
             </div>
             <div className="form-control full-width-x">
+
                 <div className="form-control error-text">
                     {error}
                 </div>
-                <button className="btn" type="submit">Login</button>
+                <div className="form-control form-submit-btn">
+
+                    <button className="btn" type="submit">Login</button>
+                </div>
             </div>
         </form>
     )

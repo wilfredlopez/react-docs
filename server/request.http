@@ -39,7 +39,12 @@ GET http://localhost:3001/user/me
 Content-Type: application/json
 Authorization: Bearer {{TOKEN}}
 
-{
-    "email": "{{EMAIL}}",
-    "password":"{{PASSWORD}}"
-}
+
+
+
+#################### 
+## My Documents
+####################
+GET http://localhost:3001/user/documents
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}

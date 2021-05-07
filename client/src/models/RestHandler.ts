@@ -5,6 +5,8 @@ export interface WorkDocument {
     data: any
     user_id: string
     _id: string
+    createdAt?: string
+    updatedAt?: string
 }
 export interface User {
     _id: string
@@ -17,6 +19,9 @@ export interface User {
 }
 
 export type UserPromise = Promise<{ user: User, token: string } | { error: string }>
+export type MePromise = Promise<{ user: User } | { error: string }>
+export type DocumentsPromise = Promise<WorkDocument[] | { error: string }>
+export type RemovePromise = Promise<{ n?: number, ok?: number, deletedCount?: number } | { error: string }>
 
 export class RestHandler {
     static BASE_URL = API_REST_URL
@@ -64,6 +69,24 @@ export class RestHandler {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${this.userToken}`
             }
-        }).then(res => res.json() as Omit<UserPromise, 'token'>)
+        }).then(res => res.json() as MePromise)
+    }
+
+    static getDocuments() {
+        return fetch(`${this.BASE_URL}/user/documents`, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.userToken}`
+            }
+        }).then(res => res.json() as DocumentsPromise)
+    }
+    static removeDocument(_id: string) {
+        return fetch(`${this.BASE_URL}/user/documents/${_id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.userToken}`
+            }
+        }).then(res => res.json() as RemovePromise)
     }
 }

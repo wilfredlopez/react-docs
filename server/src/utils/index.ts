@@ -4,12 +4,11 @@ import { JWT_SECRET } from '../env'
 import type { ObjectId } from 'bson'
 const DEFAULT_DATA = ''
 export async function findOrCreateWorkDoc(docId: string, userId: ObjectId) {
-    if (!docId) {
+    if (!docId || !userId) {
         return null
     }
     const doc = await WorkDocument.findOne({
         docId: docId,
-        user_id: userId
     })
     if (doc) {
         return doc
@@ -34,6 +33,12 @@ export function generateToken(user: UserDocument) {
     return jwt.sign(payload, JWT_SECRET)
 }
 
+
+/**
+ * 
+ * @param token 
+ * @returns {SignPayload} SignPayload or throws en error
+ */
 export function getUserIdWithToken(token: string): SignPayload {
     return jwt.verify(token, JWT_SECRET) as SignPayload
 }
