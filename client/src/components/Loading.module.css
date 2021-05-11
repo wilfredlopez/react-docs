@@ -1,0 +1,60 @@
+.LoadingContainer {
+  --yellow: #feb60a;
+  --red: var(--primary-color, #ff0062);
+  --blue: #00dbf9;
+  --violet: var(--secondary-color, #da00f7);
+  --blur-amount: 1px;
+}
+
+.LoadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
+  height: inherit;
+}
+.Item {
+  width: 3vw;
+  height: 3vw;
+  border-radius: 100%;
+  margin: 2vw;
+  animation: bounce 1.5s 0.5s linear infinite;
+  transition: all 100ms ease-in-out;
+}
+.Item.One {
+  background-color: var(--yellow);
+  animation-delay: 0.1s;
+}
+
+.Item.Two {
+  background-color: var(--red);
+  animation-delay: 0.2s;
+}
+
+.Item.Three {
+  background-color: var(--blue);
+  animation-delay: 0.3s;
+}
+
+.Item.Four {
+  background-color: var(--violet);
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%,
+  50%,
+  100% {
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  25% {
+    transform: scale(0.6);
+    filter: blur(var(--blur-amount));
+  }
+  75% {
+    filter: blur(var(--blur-amount));
+    transform: scale(1.2);
+  }
+}

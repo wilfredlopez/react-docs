@@ -1,36 +1,55 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
-import { RestHandler } from '../models/RestHandler'
-import { isAnyEmpty, toggleLabelClassForInputs } from '../utils/utils'
+import { forwardRef, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { RestHandler } from '../models/RestHandler'
+import { isAnyEmpty } from '../utils/utils'
+import { FormLayout, FormValuesRecord } from './FormLayout'
 
 
 interface Props {
-
+    nameInputRef?: React.Ref<HTMLInputElement>
 }
 
 
+type RegKeys = 'email' | 'password' | 'firstName' | 'lastName'
 
 
-export const RegisterForm = (props: Props) => {
-    const [email, setEmail] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [password, setPassword] = useState('')
+
+export const RegisterForm = forwardRef<HTMLInputElement, Props>((props, ref) => {
     const [error, setError] = useState('')
     const history = useHistory()
-
-
-    function resetForm() {
-        setEmail('')
-        setFirstName('')
-        setLastName('')
-        setPassword('')
-    }
-
-    function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-        e.preventDefault()
-
+    const registerState: FormValuesRecord<RegKeys>[] = useMemo(() => (
+        [{
+            value: '',
+            key: 'firstName',
+            label: 'Firstname',
+            type: 'text',
+            autoComplete: 'name',
+            id: "register-firstname"
+        }, {
+            key: 'lastName',
+            value: '',
+            type: 'text',
+            autoComplete: 'lastname',
+            label: 'LastName',
+            id: 'register-lastname'
+        }, {
+            key: "email",
+            value: '',
+            label: 'Email',
+            id: 'register-email',
+            autoComplete: 'email',
+            type: "email",
+            InputRef: ref
+        }, {
+            key: 'password',
+            value: '',
+            label: 'Password',
+            type: "password",
+            autoComplete: 'password',
+            id: "register-password"
+        }]
+    ), [ref])
+    function handleSubmit({ email, firstName, lastName, password }: Record<RegKeys, string>, resetForm: () => void) {
         if (isAnyEmpty([email, password, firstName, lastName])) {
             return
         }
@@ -48,81 +67,13 @@ export const RegisterForm = (props: Props) => {
             history.push('/')
         })
     }
-    useEffect(() => {
-        toggleLabelClassForInputs()
 
-    }, [])
     return (
-        <form className="container" onSubmit={handleSubmit}>
-            <div className="form-control input-underline full-width">
-                <div className="form-control">
 
-                    <label htmlFor="register-firstname" className="label label-filled">Firstname</label>
-                </div>
-                <div className="form-control">
-
-                    <input
-                        type="text"
-                        autoComplete='name'
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        id="register-firstname" />
-                </div>
-            </div>
-            <div className="form-control input-underline full-width">
-                <div className="form-control">
-
-                    <label htmlFor="register-lastname" className="label label-filled">Lastname</label>
-                </div>
-                <div className="form-control">
-
-                    <input
-                        type="text"
-                        autoComplete='lastname'
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        id="register-lastname" />
-                </div>
-            </div>
-            <div className="form-control input-underline full-width">
-                <div className="form-control">
-
-                    <label htmlFor="register-email" className="label label-filled">Email</label>
-                </div>
-                <div className="form-control">
-
-                    <input
-                        type="email"
-                        autoComplete='email'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        id="register-email" />
-                </div>
-            </div>
-            <div className="form-control input-underline full-width">
-                <div className="form-control">
-
-                    <label htmlFor="register-password" className="label label-filled">Password</label>
-                </div>
-                <div className="form-control">
-
-                    <input
-                        type="password"
-                        autoComplete="current-password"
-                        value={password}
-                        id="register-password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-            </div>
-            <div className="form-control full-width-x">
-                <div className="form-control error-text">
-                    {error}
-                </div>
-                <div className="form-control form-submit-btn">
-                    <button className="btn" type="submit">Register</button>
-                </div>
-            </div>
-        </form>
+        <FormLayout
+            btnLabel="Register"
+            initialState={registerState} error={error} handleSubmit={handleSubmit} {...props} />
     )
-}
+})
+
+

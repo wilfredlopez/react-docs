@@ -10,7 +10,8 @@
   align-items: flex-start;
   background: var(--linear-bg, #0066ea);
   color: var(--linear-bg-contrast);
-  box-shadow: 0px 2px 5px 2px rgb(0 0 0 / 15%), 0px 2px 1px 1px rgb(0 0 0 / 12%);
+  box-shadow: 0px 1px 5px 2px rgb(0 0 0 / 15%), 0px 1px 1px 1px rgb(0 0 0 / 12%);
+  max-height: var(--header-height);
 }
 
 .Header h1 {

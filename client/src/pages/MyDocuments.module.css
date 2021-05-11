@@ -1,5 +1,7 @@
 .Item {
   margin-bottom: 2rem;
+  margin-top: 2rem;
+  padding: 0 10px;
 }
 
 .DateText {

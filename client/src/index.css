@@ -4,24 +4,22 @@
   box-sizing: border-box;
 }
 :root {
+  --hue: 200;
+  --saturation: 95%;
+  --ligntness: 33%;
+  --light: hsl(var(--hue), var(--saturation), calc(var(--ligntness) + 2%));
+  --medium: hsl(var(--hue), var(--saturation), var(--ligntness));
+  --dark: hsl(var(--hue), var(--saturation), calc(var(--ligntness) - 10%));
   --light-bg-doc: #f3f3f3;
   --doc-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
   /* --primary-color: rgb(0, 102, 235);
   --primary-color-hue: hsl(214, 100%, 50%);
   --primary-color-saturation: hsl(214, 100%, 42%); */
-  --primary-color-constrast: hsl(0, 0%, 90%);
-  --primary-color: hsl(165deg, 50%, 36%);
-  --primary-color-hue: hsl(165deg, 50%, 39%);
-  --primary-color-saturation: hsl(165deg, 50%, 30%);
-  /* --hue: 42;
-  --saturation: 90%;
-  --ligntness: 77%; */
-  --hue: 165;
-  --saturation: 50%;
-  --ligntness: 35%;
-  --light: hsl(var(--hue), var(--saturation), calc(var(--ligntness) + 2%));
-  --medium: hsl(var(--hue), var(--saturation), var(--ligntness));
-  --dark: hsl(var(--hue), var(--saturation), calc(var(--ligntness) - 10%));
+  --primary-color-constrast: hsl(0, 0%, 96%);
+  --primary-color: hsl(var(--hue), 70%, 36%);
+  --primary-color-hue: hsl(var(--hue), 70%, 39%);
+  --primary-color-saturation: hsl(var(--hue), 70%, 30%);
+
   --linear-bg: linear-gradient(
     180deg,
     var(--light),
@@ -32,6 +30,12 @@
   --fix-menu-button-bg: var(--primary-color);
   --fix-menu-button-bg-light: var(--primary-color-hue);
   --fix-menu-button-bg-contrast: #fff;
+  --dark-black: #4e4d4d;
+
+  --lg-size: 790px;
+  --sm-size: 520px;
+  --xs-size: 250px;
+  --header-height: 64px;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
@@ -46,11 +50,27 @@ body {
   background-color: var(--light-bg-doc);
 }
 
+html,
+body {
+  font-size: 15px;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+p {
+  line-height: 3rem;
+}
 
+h1 {
+  line-height: 4.2rem;
+  font-size: 1.9rem;
+}
+
+h2 {
+  font-size: 1.68rem;
+}
 #text-editor {
   margin: auto;
 }
@@ -63,6 +83,12 @@ code {
   margin: 1rem;
   box-shadow: var(--doc-box-shadow);
   background-color: white;
+}
+
+ul {
+  margin: unset;
+  padding: unset;
+  list-style: none;
 }
 
 @media screen and (max-width: 790px) {
@@ -97,20 +123,35 @@ code {
 .form-submit-btn,
 .form-control.form-submit-btn {
   width: 100%;
-  max-width: 380px;
+  /* max-width: 380px; */
   justify-content: flex-end;
   align-items: center;
-  margin-right: unset;
+  margin-right: auto;
   margin-left: auto;
 }
 .form-submit-btn > button {
-  margin-right: unset;
+  margin-right: auto;
   margin-left: auto;
   width: 100%;
 }
+a {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 
+:focus-visible {
+  outline: none;
+  opacity: 0.8;
+}
+a:focus {
+  outline: 1px solid var(--primary-color);
+  outline-width: 1px;
+  outline-color: var(--primary-color);
+  outline-style: solid;
+}
 .small-space {
-  max-width: 250px;
+  max-width: var(--xs-size, 250px);
   margin-left: auto;
   margin-right: auto;
 }
@@ -233,7 +274,7 @@ FORM INPUTS AND LABEL
 .label {
   color: rgba(0, 0, 0, 0.54);
   padding: 0;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   font-weight: 400;
   line-height: 1;
@@ -265,6 +306,10 @@ input {
   animation-duration: 10ms;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* input:focus {
+  outline: 1px dashed var(--primary-color);
+} */
 
 .input-underline::before {
   left: 0;
@@ -316,13 +361,39 @@ input {
 }
 
 .container {
-  max-width: 780px;
+  max-width: var(--lg-size);
   width: 100%;
   margin: auto;
   padding-left: 10px;
   padding-right: 10px;
 }
 
+.container .container-sm {
+  max-width: var(--sm-size);
+}
+
+.form-actions {
+  width: 100%;
+  margin: -10px 0px 10px 0px;
+}
+
+.form-error-inner {
+  margin: 1rem 0 0rem 0;
+}
+
+.card {
+  background: rgb(255 255 255 / 95%);
+  /* border-radius: 0.9em; */
+  border-radius: 14px;
+  box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 20%), 2px 2px 6px 1px rgb(0 0 0 / 15%);
+  padding: 1.05rem;
+  display: block;
+}
+
+a {
+  line-height: 1.9rem;
+  text-decoration: none;
+}
 .btn {
   cursor: pointer;
   padding: 8px 12px;
@@ -336,6 +407,7 @@ input {
   justify-content: center;
   align-items: center;
   border-radius: 4px;
+  line-height: 1.9rem;
   text-transform: uppercase;
   transition: all 250ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
@@ -344,28 +416,28 @@ input {
 .btn:focus {
   background-color: var(--primary-color-saturation);
 }
-.fixed-logout[white='true'] {
+.user-menu-layout[white='true'] {
   border: 1px solid #ffffff;
 }
-.fixed-logout {
+.user-menu-layout {
   position: fixed;
   right: 10px;
   /* top: 5px; */
-  top: 10px;
+  top: 11px;
   padding: 5px 6px;
-  z-index: 2;
   border-radius: 50%;
   /* box-shadow: inset 0px 0px 5px 0px rgb(0 0 0 / 4%),
-    inset 0px 0px 0px 1px rgb(0 0 0 / 7%); */
+  inset 0px 0px 0px 1px rgb(0 0 0 / 7%); */
   /* background: rgb(220 220 220 / 81%); */
   color: white;
   display: grid;
   place-content: center;
   border: 2px solid var(--fix-menu-button-bg-light);
   background: var(--fix-menu-button-bg);
+  z-index: 30000;
 }
 
-.fixed-logout svg {
+.user-menu-layout svg {
   /* transform: translateY(2px); */
   stroke: var(--fix-menu-button-bg-contrast);
 }
@@ -397,6 +469,9 @@ input {
 .vh-100 {
   height: 100vh;
 }
+.vh-50 {
+  height: 50vh;
+}
 .error-text {
   color: red;
 }
@@ -406,12 +481,19 @@ input {
 .btn.btn-info:hover {
   background-color: hsl(197, 54%, 45%);
 }
+.text-dark {
+  color: var(--dark-black);
+}
+.text-size-md {
+  font-size: 1.5rem;
+}
 .btn.btn-link {
   background-color: transparent;
   color: hsl(229, 69%, 43%);
   font-size: 1rem;
   text-transform: none;
   position: relative;
+  font-weight: 600;
 }
 .btn.btn-link:hover::after {
   content: '';
@@ -427,12 +509,13 @@ input {
   background-color: transparent;
   color: hsl(229, 69%, 60%);
 }
+
 .btn.btn-sm {
   padding: 6px 8px;
 }
 
 .btn.btn-xs {
-  padding: 5px 6px;
+  padding: 2px 7px;
   font-size: 0.9rem;
 }
 .btn-danger {

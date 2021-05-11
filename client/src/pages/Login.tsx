@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { LoginForm } from '../components/LoginForm'
 import { RegisterForm } from '../components/RegisterForm'
 import { RestHandler } from '../models/RestHandler'
@@ -13,6 +13,8 @@ interface Props {
 
 export const Login = (props: Props) => {
     const [isLogin, setIsLogin] = useState(true)
+    const EmailInputRef = useRef<HTMLInputElement>(null)
+    const NameInputRef = useRef<HTMLInputElement>(null)
     const history = useHistory()
     usePageTitle(`Login / Register - ${APP_TITLE}`)
 
@@ -27,6 +29,12 @@ export const Login = (props: Props) => {
         })
     }, [history])
 
+
+    useEffect(() => {
+        EmailInputRef.current?.focus()
+        NameInputRef.current?.focus()
+    }, [isLogin])
+
     function toggleLogin() {
         setIsLogin(c => !c)
     }
@@ -39,12 +47,17 @@ export const Login = (props: Props) => {
 
             <div className="container">
                 <div className="mt-2" />
-                {isLogin ?
-                    <LoginForm />
-                    :
-                    <RegisterForm />
-                }
-                <div className="flex flex-end">
+                <h1 className="text-center text-dark text-size-md">Login / Register</h1>
+                <div className="card">
+
+                    {isLogin ?
+                        <LoginForm ref={EmailInputRef} />
+                        :
+                        <RegisterForm ref={NameInputRef} />
+                    }
+
+                </div>
+                <div className="flex flex-end container">
                     <div>
                         {isLogin ?
                             <p>Dont have an account?</p> :

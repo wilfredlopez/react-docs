@@ -42,23 +42,34 @@ export const TextEditor = () => {
     const history = useHistory()
     const [socket, setSocket] = useState<SocketIOClient.Socket>()
     const [quill, setQuill] = useState<Quill>()
+
+    const handleUnauthorized = useCallback(() => {
+        history.push('/login')
+    }, [history])
+
     useEffect(() => {
+        if (RestHandler.userToken === null) {
+            handleUnauthorized()
+            return
+        }
         const s = io.connect(API_SOCKET_URL, {
             auth: {
                 Authorization: RestHandler.userToken
             }
         })
+        // if (RestHandler.userToken === null || !s.connected) {
+
         setSocket(s)
         return () => {
             s.disconnect()
         }
-    }, [])
+    }, [handleUnauthorized])
     useEffect(() => {
         if (!socket) return
         socket.once(EVENT_NAMES.unauthorized, () => {
-            history.push('/login')
+            handleUnauthorized()
         })
-    }, [socket, id, history])
+    }, [socket, id, handleUnauthorized])
 
     useEffect(() => {
         if (!quill || !socket) return

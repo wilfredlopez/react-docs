@@ -18,12 +18,18 @@ export const Menu = ({ show }: Props) => {
 
     return (
         <div className={menuClasses}>
-            <Link to="/me" className={"btn btn-sm".concat(` ` + classes.MenuBtn)}>My Documents</Link>
-            <button
-                onClick={logout}
-                className={"btn btn-sm".concat(` ` + classes.Logout)} aria-label="logout" title="logout">
-                <span>Logout</span> <LogoutIcon width={20} />
-            </button>
+            <div className={classes.ITEM}>
+
+                <Link to="/me" className={"btn ".concat(` ` + classes.MenuBtn)}>My Documents</Link>
+            </div>
+            <div className={classes.ITEM}>
+
+                <button
+                    onClick={logout}
+                    className={"btn ".concat(` ` + classes.Logout)} aria-label="logout" title="logout">
+                    <span>Logout</span> <LogoutIcon width={20} />
+                </button>
+            </div>
         </div>
     )
 }

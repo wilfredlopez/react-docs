@@ -5,6 +5,7 @@ import classes from './MyDocuments.module.css'
 import { Header } from '../components/Header'
 import { formatDate } from '../utils'
 import { UserMenu } from '../components/UserMenu'
+import { Loading } from '../components/Loading'
 
 
 function getDocText(doc: WorkDocument) {
@@ -28,13 +29,18 @@ function getDocText(doc: WorkDocument) {
 export const MyDocuments = () => {
     const [documents, setDocuments] = useState<WorkDocument[]>([])
     const [redirect, setRedirect] = useState(false)
+    const [loading, setloading] = useState(true)
     useEffect(() => {
         RestHandler.getDocuments().then((docs) => {
             if ('error' in docs) {
                 setRedirect(true)
                 return
             }
+            setloading(false)
             setDocuments(docs)
+        }).catch((e) => {
+            console.error(e)
+            setRedirect(true)
         })
     }, [])
 
@@ -47,6 +53,8 @@ export const MyDocuments = () => {
         })
     }
 
+
+
     if (redirect) {
         return <Redirect to="/login" />
     }
@@ -54,36 +62,45 @@ export const MyDocuments = () => {
     return (
         <main className="bg-main vh-100">
             <Header />
-            <UserMenu />
-            <div className="container mt-2">
+            {loading ? <div className="vh-50"> <Loading /> </div> :
+                <>
+                    <UserMenu />
+                    <div className="container container-sm">
+                        <div className="mt-2" />
 
-                <h1 className={classes.Title}>Recent Documents</h1>
-                <ol>
+                        <h1 className={classes.Title}>Recent Documents</h1>
+                        <div className="mt-2" />
+                        {documents.length > 0 &&
 
-                    {documents.map(doc => {
-                        return <li key={doc._id} className={classes.Item}>
-                            <div className="flex">
-                                <Link
-                                    className={classes.Link}
-                                    to={`/documents/${doc.docId}`}>{getDocText(doc)}</Link >
-                                <button
-                                    onClick={() => {
-                                        removeDoc(doc._id)
-                                    }}
-                                    className="btn btn-xs btn-danger no-upper">Remove</button>
+                            <ul className="card">
 
-                            </div>
-                            <p
-                                className={classes.DateText}
-                            >Updated: {formatDate(doc.updatedAt)}</p>
+                                {documents.map(doc => {
+                                    return <li key={doc._id} className={classes.Item}>
+                                        <div className="flex">
+                                            <Link
+                                                className={classes.Link}
+                                                to={`/documents/${doc.docId}`}>{getDocText(doc)}</Link >
+                                            <button
+                                                onClick={() => {
+                                                    removeDoc(doc._id)
+                                                }}
+                                                className="btn btn-xs btn-danger no-upper">Remove</button>
 
-                        </li>
-                    })}
-                </ol>
-                <div className="mt-4 small-space">
-                    <Link className="btn" to="/">Create New</Link>
-                </div>
-            </div>
+                                        </div>
+                                        <p
+                                            className={classes.DateText}
+                                        >Updated: {formatDate(doc.updatedAt)}</p>
+
+                                    </li>
+                                })}
+                            </ul>
+                        }
+                        <div className="mt-4 small-space">
+                            <Link className="btn" to="/">Create New</Link>
+                        </div>
+                    </div>
+                </>
+            }
         </main>
     )
 }

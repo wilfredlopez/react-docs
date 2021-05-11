@@ -26,7 +26,7 @@ export type RemovePromise = Promise<{ n?: number, ok?: number, deletedCount?: nu
 export class RestHandler {
     static BASE_URL = API_REST_URL
     static get userToken() {
-        return localStorage.getItem(TOKEN_KEY_LOCAL_STORAGE) as string | undefined
+        return localStorage.getItem(TOKEN_KEY_LOCAL_STORAGE) as string | null
     }
 
     static logout() {
